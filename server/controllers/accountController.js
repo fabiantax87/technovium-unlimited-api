@@ -25,7 +25,7 @@ exports.createAccount = async (req, res) => {
    const newAccount = new Account({
       username: req.body.username
       // expand fields <<
-      // check is data doesn't exsist yet
+      // check if data doesn't exsist yet
    });
   
    try {
