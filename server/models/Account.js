@@ -26,7 +26,7 @@ const accountSchema = new mongoose.Schema({
     required: true,
   },
   status: {
-    type: Object,
+    type: String,
     required: true,
   },
 });
