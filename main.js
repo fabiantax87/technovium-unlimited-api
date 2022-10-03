@@ -12,4 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 const routes = require("./server/routes/accountRoutes.js");
 app.use("/", routes);
 
+app.get("/", (req, res) => {
+  res.send("technovium unlimited api");
+});
+
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
