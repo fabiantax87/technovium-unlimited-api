@@ -13,4 +13,8 @@ const accountRoutes = require("./server/routes/accountRoutes.js");
 const levelRoutes = require("./server/routes/levelRoutes.js");
 app.use("/", accountRoutes, levelRoutes);
 
+app.get("/", (req, res) => {
+  res.send("technovium unlimited api");
+});
+
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
