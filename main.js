@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -11,9 +12,5 @@ app.use(express.urlencoded({ extended: true }));
 
 const routes = require("./server/routes/userRoutes.js");
 app.use("/", routes);
-
-app.get("/", (req, res) => {
-  res.send("technovium unlimited api");
-});
 
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
