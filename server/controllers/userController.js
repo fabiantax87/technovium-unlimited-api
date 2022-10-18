@@ -1,5 +1,6 @@
 require("../models/db");
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
 /**
  * /api/user/{id}
@@ -16,16 +17,39 @@ exports.getUser = async (req, res) => {
   }
 };
 
+/** 
+ * /api/user/all
+ * GET all users returned
+*/
+
+exports.getAllUsers = async (req, res) => {
+
+   try {
+      const users = await User.find({});
+      res.json(users);
+
+   } catch (err) {
+      res.status(400).json({message: err});
+   }
+}
+
 /**
  * /api/user/signup/{username}
  * POST create new user
  */
 
 exports.createUser = async (req, res) => {
+
+   const hashedPass = await bcrypt.hash(req.body.password, 10);
+
   const newUser = new User({
-    username: req.body.username,
-    // expand fields <<
-    // check if data doesn't exsist yet
+   id: req.body.id,
+   username: req.body.username,
+   email: req.body.email,
+   password: hashedPass,
+   date_of_birth: req.body.date_of_birth,
+   gender: req.body.gender,
+   status: req.body.status
   });
 
   try {
