@@ -45,7 +45,6 @@ exports.createUser = async (req, res) => {
    const hashedPass = await bcrypt.hash(req.body.password, 10);
 
   const newUser = new User({
-   id: req.body.id,
    username: req.body.username,
    email: req.body.email,
    password: hashedPass,
@@ -68,9 +67,14 @@ exports.createUser = async (req, res) => {
  * POST login user
  */
 
+
+
 exports.loginUser = async (req, res) => {
+
+
+  
   User.findOne({ 
-    username: req.body.username
+    email: req.body.email
   })
   .exec((err,user) => {
     if(err){
@@ -94,30 +98,28 @@ exports.loginUser = async (req, res) => {
       });
     }
 
-  })
-
-  const user = User({
-      id: req.body.id,
-      email: req.body.email,
-      password: req.body.password
-    });
-
+    
   const accessToken = generateAccessToken(user)
-  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+  const refreshToken = jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET)
 
   try {
       refreshTokens.push(refreshToken)
-      res.json({user, accessToken: accessToken, refreshToken: refreshToken})
-      res.status(200).send({
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        accessToken: token
-      });
+      return res.status(200).json({user, accessToken: accessToken, refreshToken: refreshToken})
+
   } catch (err) {
-   console.log(err.message);
-   res.status(400).json({ message: err });
+    console.log(err.message);
+    return res.status(400).json({ message: err });
   }
+    
+
+  })
+
+  /*const user = User({
+    id: req.body.id,
+    email: req.body.email,
+    password: req.body.password
+  });*/
+
 };
 
 function generateAccessToken(user) {
