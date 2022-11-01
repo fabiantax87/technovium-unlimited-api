@@ -8,13 +8,13 @@ const bcrypt = require("bcrypt");
  */
 
 exports.getUser = async (req, res) => {
-  let paramID = req.params.id;
-  try {
-    const user = await User.findOne({ _id: paramID });
-    res.json(user);
-  } catch (err) {
-    res.status(400).json({ message: err });
-  }
+   let paramID = req.params.id;
+   try {
+      const user = await User.findOne({ _id: paramID });
+      res.json(user);
+   } catch (err) {
+      res.status(400).json({ message: err });
+   }
 };
 
 /** 
@@ -29,7 +29,7 @@ exports.getAllUsers = async (req, res) => {
       res.json(users);
 
    } catch (err) {
-      res.status(400).json({message: err});
+      res.status(400).json({ message: err });
    }
 }
 
@@ -42,21 +42,28 @@ exports.createUser = async (req, res) => {
 
    const hashedPass = await bcrypt.hash(req.body.password, 10);
 
-  const newUser = new User({
-   id: req.body.id,
-   username: req.body.username,
-   email: req.body.email,
-   password: hashedPass,
-   date_of_birth: req.body.date_of_birth,
-   gender: req.body.gender,
-   status: req.body.status
-  });
+   User.findOne({
+      email: req.body.email
+   })
+   .exec((err,user) => {
+      if(err){ return res.status(500).send({ message: err }); }
+      if(user){ return res.status(403).send({ message: "Email is already in use." }); }
+   });
 
-  try {
-    await newUser.save();
-    res.json(newUser);
-  } catch (err) {
-    console.log(err.message);
-    res.status(400).json({ message: err });
-  }
+   const newUser = new User({
+      username: req.body.username,
+      email: req.body.email.toLowerCase(),
+      password: hashedPass,
+      date_of_birth: req.body.date_of_birth,
+      gender: req.body.gender,
+      status: req.body.status
+   });
+
+   try {
+      await newUser.save();
+      res.json(newUser);
+   } catch (err) {
+      console.log(err.message);
+      res.status(400).json({ message: err });
+   }
 };
