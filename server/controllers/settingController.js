@@ -33,7 +33,7 @@ exports.listSettings = async(req, res) => {
 * - PUT all Settings 
 **/
 
-exports.updateAllSettings = async(req, res) => {
+exports.updateAllSettings = async (req, res) => {
 
     console.log(req.params)
     console.log(req.body)
@@ -46,10 +46,19 @@ exports.updateAllSettings = async(req, res) => {
     let gender = req.body.gender;
     let status = req.body.status;
 
+
     try {
-        const updateSettings = await Setting.updateMany({ _id:paramID }, { username:username }, { email:email }, { password:password }, { date_of_birth:date_of_birth }, { gender:gender }, { status:status });
+        const updateSettings = await Setting.updateMany(
+
+            { _id: paramID },
+            {
+                username: username, email: email, password: password,
+                date_of_birth: date_of_birth, gender: gender, status: status
+            }
+
+        );
         res.json(updateSettings);
-    } catch(err) {
+    } catch (err) {
         res.status(400).json({ message: err });
     }
 }
