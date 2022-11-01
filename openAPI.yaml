@@ -13,6 +13,10 @@ security:
   - bearerAuth: []
 
 paths:
+    ##
+    # Admin can see all information of the users -> except password
+    # add roles: user, creator and admin
+    ##
     /users:
         get:
             summary: Get all users
@@ -24,9 +28,20 @@ paths:
                     'application/json':
                         schema:
                             $ref: '#/components/schemas/Users'   
+            security:
+                - basicAuth: []
             responses:
-                '200':
-                    description: get  
+                200:
+                    description: 'Authenticated, you can browse all users TODO: ONLY ADMIN can access this information; can authanticated user get information of all users????'
+                403: 
+                    description: 'You do not have necessary permissions for the resource'
+
+
+    ##
+    # Admin can see all information of the user
+    # user or creator can see own information
+    ##
+                
     /users/{id}:
         get:
             summary: Get user with {user_id}
@@ -40,14 +55,19 @@ paths:
                   schema:
                         $ref: '#/components/schemas/User'
             requestBody:
-                description: get only one user
+                description: get only one user TODO what information should be visible
                 content:
                     'application/json':
                         schema:
-                            $ref: '#/components/schemas/User'   
+                            $ref: '#/components/schemas/User'
+            security:
+                - basicAuth: []   
             responses:
-                '200':
+                200:
                     description: user results
+                403: 
+                    description: 'You do not have necessary permissions for the resource'
+                
     /users/signup:
         post:
             summary: Signup user
@@ -92,6 +112,12 @@ paths:
             responses:
                 '201':
                     description: email with an resetlink has been sennt to the user email address
+    
+    ##
+    # Admin can see all information of the users -> except password
+    # user or creatr can access his/her information
+    ##
+
     /users/settings: #add JWT security
         put:
             summary: User settings (email, pass etc.)
@@ -114,6 +140,8 @@ paths:
                     description: Item Not Found
                 500:
                     description: Server error
+                403: 
+                    description: 'You do not have necessary permissions for the resource'
         get:
             summary: Get user settings
             description: Get user settings
@@ -128,7 +156,14 @@ paths:
                             $ref: '#/components/schemas/User'   
             responses:
                 '200':
-                    description: user settings recieved 
+                    description: user settings recieved
+                '403': 
+                    description: 'You do not have necessary permissions for the resource' 
+
+    ##
+    # user or creator can access and update his/her information
+    ##
+
     /users/game/latestLocation/{user_id}:
         post:
             summary: Add latest user location
@@ -150,8 +185,10 @@ paths:
                             $ref: '#/components/schemas/UserLocation'
                         
             responses:
-                '201':
+                201:
                     description: created
+                40: 
+                    description: 'You do not have necessary permissions for the resource'
         get:
             summary: Get user latest game location
             description: Get user latest game location
@@ -171,8 +208,13 @@ paths:
                         schema:
                             $ref: '#/components/schemas/UserLocation'   
             responses:
-                '200':
+                200:
                     description: recieved
+                403: 
+                    description: 'You do not have necessary permissions for the resource'
+    ##
+    # user or creator can access and update his/her information
+    ##
     /users/game/score/{user_id}:
         get:
             summary: Get all scores of the user
@@ -195,8 +237,13 @@ paths:
                             $ref: '#/components/schemas/Achievement'
                         
             responses:
-                '201':
+                201:
                     description: created
+                403: 
+                    description: 'You do not have necessary permissions for the resource'
+    ##
+    # user or creator can access and update his/her information
+    ##
     /users/game/level/{level_id}/success:
         post:
             summary: add achievement of the user -> see the schema of game and level -> game_id and level_id
@@ -217,8 +264,13 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Score'   
             responses:
-                '201':
+                201:
                     description: score created
+                403: 
+                    description: 'You do not have necessary permissions for the resource'
+    ##
+    # user or creator can access and update his/her information
+    ##
     /users/game/level/{level_id}/started:
         post:
             summary: Log started level
@@ -239,8 +291,10 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Score'   
             responses:
-                '201':
+                201:
                     description: score updated to started
+                403: 
+                    description: 'You do not have necessary permissions for the resource'
     /games:
         get:
             summary: Get all games
@@ -277,17 +331,17 @@ paths:
                     description: recieved 
     /levels:
         get:
-            summary: Get all levels of the game
-            description: Get all levels of the game
-            operationId: getAllLevelsOfGame
+            summary: Get all levels
+            description: Get all levels
+            operationId: getAllLevels
             requestBody:
-                description: Get all levels of one game
+                description: Get all levels
                 content:
                     'application/json':
                         schema:
                             $ref: '#/components/schemas/Levels'
             responses:
-                '200':
+                200:
                     description: recieved
     /levels/{game_id}:
         get:

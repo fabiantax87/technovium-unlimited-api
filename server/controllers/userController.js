@@ -66,6 +66,4 @@ exports.createUser = async (req, res) => {
       console.log(err.message);
       res.status(400).json({ message: err });
    }
-
-   
 };
