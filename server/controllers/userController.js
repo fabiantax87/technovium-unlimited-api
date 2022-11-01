@@ -52,7 +52,7 @@ exports.createUser = async (req, res) => {
 
    const newUser = new User({
       username: req.body.username,
-      email: req.body.email,
+      email: req.body.email.toLowerCase(),
       password: hashedPass,
       date_of_birth: req.body.date_of_birth,
       gender: req.body.gender,
@@ -66,4 +66,6 @@ exports.createUser = async (req, res) => {
       console.log(err.message);
       res.status(400).json({ message: err });
    }
+
+   
 };
