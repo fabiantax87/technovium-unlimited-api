@@ -7,15 +7,21 @@ const Level = require("../models/Level");
  */
 
 exports.getLevels = async (req, res) => {
-    try {
-        const levels = await Level.find({});
-        res.json(levels);
-    } catch (err) {
-        res.status(400).json({
-            message: err
-        })
-    }
-}
+  let paramLimit = req.params.limit;
+
+  if (paramLimit == 0) {
+    paramLimit = 10;
+  }
+
+  try {
+    const levels = await Level.find({}).limit(paramLimit);
+    res.json(levels);
+  } catch (err) {
+    res.status(400).json({
+      message: err,
+    });
+  }
+};
 
 /**
  * /api/levels/:game_id
@@ -23,12 +29,12 @@ exports.getLevels = async (req, res) => {
  */
 
 exports.getGameLevels = async (req, res) => {
-    try {
-        const levels = await Level.find({game_id: req.params.game_id});
-        res.json(levels);
-    } catch (err) {
-        res.status(400).json({
-            message: err
-        })
-    }
-}
+  try {
+    const levels = await Level.find({ game_id: req.params.game_id });
+    res.json(levels);
+  } catch (err) {
+    res.status(400).json({
+      message: err,
+    });
+  }
+};
