@@ -23,9 +23,14 @@ exports.getUser = async (req, res) => {
 */
 
 exports.getAllUsers = async (req, res) => {
+  let paramLimit = req.params.limit;
+
+  if (paramLimit == 0) {
+    paramLimit = 10;
+  }
 
    try {
-      const users = await User.find({});
+      const users = await User.find({}).limit(paramLimit);
       res.json(users);
 
    } catch (err) {
